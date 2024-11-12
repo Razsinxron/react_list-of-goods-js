@@ -18,27 +18,29 @@ export const goodsFromServer = [
 export const App = () => {
   const [sortField, setSortField] = useState('');
   const [reversed, setReversed] = useState(false);
-  let visibleGoods = [...goodsFromServer].sort((good1, good2) => {
+
+  // Сортировка списка товаров
+  const visibleGoods = [...goodsFromServer].sort((good1, good2) => {
     switch (sortField) {
       case 'sortAlphabetically':
-        return good1[0].localeCompare(good2[0]);
+        return good1.localeCompare(good2);
       case 'sortLength':
         return good1.length - good2.length;
-
       default:
         return 0;
     }
   });
 
+  // Применение реверса
   if (reversed) {
-    visibleGoods = visibleGoods.reverse();
+    visibleGoods.reverse();
   }
 
-  function Reset() {
+  // Функция сброса
+  const resetGoods = () => {
     setSortField('');
-
     setReversed(false);
-  }
+  };
 
   return (
     <div className="section content">
@@ -70,30 +72,29 @@ export const App = () => {
         <button
           type="button"
           className={
-            reversed ? 'button is-warning ' : 'button is-warning is-light'
+            reversed ? 'button is-warning' : 'button is-warning is-light'
           }
           onClick={() => setReversed(!reversed)}
         >
           Reverse
         </button>
-        {reversed || sortField ? (
+
+        {(reversed || sortField) && (
           <button
             type="button"
             className="button is-danger is-light"
-            onClick={() => {
-              Reset();
-            }}
+            onClick={resetGoods}
           >
             Reset
           </button>
-        ) : (
-          <div> </div>
         )}
       </div>
 
       <ul>
         {visibleGoods.map(good => (
-          <li data-cy="Good">{good}</li>
+          <li data-cy="Good" key={good}>
+            {good}
+          </li>
         ))}
       </ul>
     </div>
